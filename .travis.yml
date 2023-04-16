@@ -4,6 +4,7 @@ services:
 before_install:
   # openssl serviceaccount.json -d
   # push serviceaccount.json.enc to github and delete original one
+  # github asks for user credentials personal access token and correct repository name.
   - curl https://sdk.cloud.google.com | bash > /dev/null;
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
@@ -11,3 +12,9 @@ before_install:
   # install ruby using docker image
   # the install travis inside container using ruby gem package manager
   # make sure to switch to app folder inside before running above commands
+  - gcloud config set project skilful-berm-214822
+  - gcloud config set compute/zone us-central1-a
+  - gcloud container clusters get-credentials multi-cluster
+
+script:
+  - docker run -e CI=true vinaykumar785557/react-test npm test
