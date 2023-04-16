@@ -1,0 +1,13 @@
+sudo: required
+services:
+  - docker
+before_install:
+  # openssl serviceaccount.json -d
+  # push serviceaccount.json.enc to github and delete original one
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+  # install ruby using docker image
+  # the install travis inside container using ruby gem package manager
+  # make sure to switch to app folder inside before running above commands
