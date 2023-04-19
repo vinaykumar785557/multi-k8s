@@ -1,0 +1,46 @@
+apiVersion: skaffold/v2beta12 
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+        - ./k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: cygnetops/client-skaffold
+      context: client
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*.js'
+            dest: .
+          - src: 'src/**/*.css'
+            dest: .
+          - src: 'src/**/*.html'
+            dest: .
+    - image: cygnetops/worker-skaffold
+      context: worker
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: '*.js'
+            dest: .
+    - image: cygnetops/server-skaffold
+      context: server
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: '*.js'
+            dest: .
+#  in yaml - indicates an array.
+#  context in docker refers to a folder or something like that.
+
+# skaffold operates in two modes
+# mode 1 : rebuild client from scratch, update k8s.
+# mode 2 : inject updated files into the client pod, rely on react app to automatically update itself.
+
+# run skaffold dev in terminal.
